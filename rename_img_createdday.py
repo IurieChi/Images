@@ -14,9 +14,9 @@ def generate_created_date(path):
     utc_timestamp = datetime.utcfromtimestamp(creation_day)
     return utc_timestamp.strftime('%m_%y_')
 
-def rename_image(image_folder):
+def rename_image(image_folder, type_file):
     os.chdir(image_folder)
-    type_file = ['.png','.jpg']
+    # type_file = [file_type]
     for path in Path(image_folder).iterdir():
         if path.is_file()and path.suffix in type_file:
             # print(f"Rename {path.stem}" )
@@ -31,13 +31,15 @@ def rename_image(image_folder):
 # ('images')    
 
 # GUI
-sg.theme('Dark Grey 13')  #DarkTeal2
+sg.theme('DarkTeal2')
 
 form_rows = [ 
     [sg.Text('Add created date to image from repository.')],
     [sg.Text('Image path:', size=(10,1)),sg.Input(key='path'),sg.FolderBrowse()], 
+    [sg.Text('Select image type:')],
+    [sg.Checkbox('JPG',key='jpg'),sg.Checkbox('PNG',key='png'),sg.Checkbox('RAV',key='rav'),sg.Checkbox('HEIC',key='HEIC'),sg.Checkbox('SVG',key='svg')],
     [sg.Text(size=(40,1), key='-OUTPUT-')],
-    [sg.Button('Rename Img'), sg.Button('Exit')],   
+    [sg.Button('Rename Img'), sg.Button('Exit')], 
 ]
 
 window = sg.Window('Rename Image from repository', form_rows)
@@ -45,14 +47,23 @@ while True:
     event , value = window.read()
     
     f_path = value['path'] #save path to variable
+    type_file = [] #create ampty aray for file types
 
     if event == 'Rename Img':
         if f_path == '':
-            window['-OUTPUT-'].update("Select folder",text_color='red')
+            window['-OUTPUT-'].update("Select folder",text_color='yellow')
+        elif value['jpg'] !=True and value['png'] !=True :
+            window['-OUTPUT-'].update('select image type to be renamed',text_color = 'green')
         else:
             window['-OUTPUT-'].update("")
-            rename_image(f_path)
-            window['-OUTPUT-'].update("Succes",text_color='green')
+            if value['jpg'] == True:
+                type_file.append('jpg')
+            elif value['png'] == True:
+                type_file.append('png')
+            
+            # rename_image(f_path,type_file)
+            # window['-OUTPUT-'].update("Succes",text_color='green')
+            window['-OUTPUT-'].update(type_file,text_color='yellow')
  
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
