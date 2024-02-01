@@ -11,22 +11,19 @@ def generate_created_date(path):
     # Windows --> stat_result.st_ctime
 	# Other Unix --> stat_result.st_ctime (last modification date)
 	# Other Linux --> stat_result.st_mtime (last modification date)
-    utc_timestamp = datetime.utcfromtimestamp(creation_day)
-    return utc_timestamp.strftime('%m_%y_')
+    timestamp = datetime.utcfromtimestamp(creation_day)
+    return timestamp.strftime('%m_%y_')
 
 def rename_image(image_folder, type_file):
     os.chdir(image_folder)
-    # type_file = [file_type]
+    # type_file = ['png']
     for path in Path(image_folder).iterdir():
         if path.is_file()and path.suffix in type_file:
             # print(f"Rename {path.stem}" )
             date = generate_created_date(path)
-            new_path = Path(date + path.stem + path.suffix)
-            path.rename(new_path)
+            new_name = Path(date + path.stem + path.suffix)
+            path.rename(new_name)
             
-
-
-#call function 
 
 # ('images')    
 
@@ -37,7 +34,8 @@ form_rows = [
     [sg.Text('Add created date to image from repository.')],
     [sg.Text('Image path:', size=(10,1)),sg.Input(key='path'),sg.FolderBrowse()], 
     [sg.Text('Select image type:')],
-    [sg.Checkbox('JPG',key='jpg'),sg.Checkbox('PNG',key='png'),sg.Checkbox('RAV',key='rav'),sg.Checkbox('HEIC',key='HEIC'),sg.Checkbox('SVG',key='svg')],
+    [sg.Checkbox('Select All:', key= 'all')],
+    [sg.Checkbox('JPG',key='.jpg'),sg.Checkbox('PNG',key='.png'),sg.Checkbox('RAV',key='.rav'),sg.Checkbox('HEIC',key='.HEIC'),sg.Checkbox('SVG',key='.svg')],
     [sg.Text(size=(40,1), key='-OUTPUT-')],
     [sg.Button('Rename Img'), sg.Button('Exit')], 
 ]
@@ -47,23 +45,27 @@ while True:
     event , value = window.read()
     
     f_path = value['path'] #save path to variable
-    type_file = [] #create ampty aray for file types
+    file_type = [] #create ampty aray for file types
 
     if event == 'Rename Img':
         if f_path == '':
             window['-OUTPUT-'].update("Select folder",text_color='yellow')
-        elif value['jpg'] !=True and value['png'] !=True :
-            window['-OUTPUT-'].update('select image type to be renamed',text_color = 'green')
+        elif value['all']:
+            file_type = ['.jpg','.png','.rav','.HEIC','.svg']
+            rename_image(f_path,file_type)
+            window['-OUTPUT-'].update("Succes",text_color='green')
         else:
-            window['-OUTPUT-'].update("")
-            if value['jpg'] == True:
-                type_file.append('jpg')
-            elif value['png'] == True:
-                type_file.append('png')
-            
-            # rename_image(f_path,type_file)
-            # window['-OUTPUT-'].update("Succes",text_color='green')
-            window['-OUTPUT-'].update(type_file,text_color='yellow')
+            if value['.jpg'] !=True and value['.png'] !=True and value['.rav'] !=True and value['.HEIC'] !=True and value['.svg'] !=True:
+                window['-OUTPUT-'].update('Select image type to be renamed',text_color = 'white')
+            else:
+                window['-OUTPUT-'].update("")
+                for checkbox_key in ['.jpg','.png','.rav','.HEIC','.svg']:
+                        if value [checkbox_key]:
+                            file_type.append(checkbox_key)
+
+                rename_image(f_path,file_type)
+                window['-OUTPUT-'].update("Succes",text_color='green')
+                # window['-OUTPUT-'].update(file_type,text_color='yellow')
  
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
