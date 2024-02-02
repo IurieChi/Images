@@ -35,7 +35,7 @@ form_rows = [
     [sg.Text('Image path:', size=(10,1)),sg.Input(key='path'),sg.FolderBrowse()], 
     [sg.Text('Select image type:')],
     [sg.Checkbox('Select All:', key= 'all')],
-    [sg.Checkbox('JPG',key='.jpg'),sg.Checkbox('PNG',key='.png'),sg.Checkbox('RAV',key='.rav'),sg.Checkbox('HEIC',key='.HEIC'),sg.Checkbox('SVG',key='.svg')],
+    [sg.Checkbox('JPG',key='.jpg'),sg.Checkbox('PNG',key='.png'),sg.Checkbox('GIF',key='.gif'),sg.Checkbox('RAV',key='.rav'),sg.Checkbox('SVG',key='.svg'),sg.Checkbox('Bitmap', key='.bmp'),sg.Checkbox('HEIC',key='.HEIC')],
     [sg.Text(size=(40,1), key='-OUTPUT-')],
     [sg.Button('Rename Img'), sg.Button('Exit')], 
 ]
@@ -51,20 +51,20 @@ while True:
         if f_path == '':
             window['-OUTPUT-'].update("Select folder",text_color='yellow')
         elif value['all']:
-            file_type = ['.jpg','.png','.rav','.HEIC','.svg']
+            file_type = ['.jpg','.png','.gif','.bmp','.rav','.svg','.HEIC']
             rename_image(f_path,file_type)
             window['-OUTPUT-'].update("Succes",text_color='green')
         else:
-            if value['.jpg'] !=True and value['.png'] !=True and value['.rav'] !=True and value['.HEIC'] !=True and value['.svg'] !=True:
+            if value['.jpg'] !=True and value['.png'] !=True and value['.gif']!=True and value['.bmp']!=True and value['.rav'] !=True and value['.HEIC'] !=True and value['.svg'] !=True:
                 window['-OUTPUT-'].update('Select image type to be renamed',text_color = 'white')
             else:
                 window['-OUTPUT-'].update("")
-                for checkbox_key in ['.jpg','.png','.rav','.HEIC','.svg']:
+                for checkbox_key in ['.jpg','.png','.gif','.bmp','.rav','.svg','.HEIC']:
                         if value [checkbox_key]:
                             file_type.append(checkbox_key)
 
                 rename_image(f_path,file_type)
-                window['-OUTPUT-'].update("Succes",text_color='green')
+                window['-OUTPUT-'].update("Succes",text_color='white')
                 # window['-OUTPUT-'].update(file_type,text_color='yellow')
  
     if event == sg.WIN_CLOSED or event == 'Exit':
