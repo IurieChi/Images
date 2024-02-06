@@ -44,15 +44,15 @@ window = sg.Window('Rename Image from repository', form_rows)
 while True:
     event , value = window.read()
     
-    f_path = value['path'] #save path to variable
+    folder_path = value['path'] #save path to variable
     file_type = [] #create ampty aray for file types
 
     if event == 'Rename Img':
-        if f_path == '':
+        if folder_path == '':
             window['-OUTPUT-'].update("Select folder",text_color='yellow')
         elif value['all']:
             file_type = ['.jpg','.png','.gif','.bmp','.rav','.svg','.HEIC']
-            rename_image(f_path,file_type)
+            rename_image(folder_path,file_type)
             window['-OUTPUT-'].update("Succes",text_color='green')
         else:
             if value['.jpg'] !=True and value['.png'] !=True and value['.gif']!=True and value['.bmp']!=True and value['.rav'] !=True and value['.HEIC'] !=True and value['.svg'] !=True:
@@ -63,7 +63,7 @@ while True:
                         if value [checkbox_key]:
                             file_type.append(checkbox_key)
 
-                rename_image(f_path,file_type)
+                rename_image(folder_path,file_type)
                 window['-OUTPUT-'].update("Succes",text_color='white')
                 # window['-OUTPUT-'].update(file_type,text_color='yellow')
  
