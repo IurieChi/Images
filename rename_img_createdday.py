@@ -12,11 +12,12 @@ def generate_created_date(path,data_format):
 	# Other Unix --> stat_result.st_ctime (last modification date)
 	# Other Linux --> stat_result.st_mtime (last modification date)
     timestamp = datetime.utcfromtimestamp(creation_day)
+    print(timestamp)
     return timestamp.strftime(data_format)
 
 def rename_image(image_folder, type_file,data_format):
     os.chdir(image_folder)
-    # type_file = ['png']
+    
     for path in Path(image_folder).iterdir():
         if path.is_file()and path.suffix in type_file:
             # print(f"Rename {path.stem}" )

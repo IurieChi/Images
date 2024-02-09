@@ -22,7 +22,7 @@ while True:
     event , value = window.read()
     
     folder_path = value['path'] #save path to variable
-    file_type = [] #create ampty aray for file types
+    file_type = [] #create empty aray for file types
     date_format = '' #format date 
 
     if event == 'Rename Img':
