@@ -81,9 +81,16 @@ while True:
             
         except:
             file_list = []
-        image_name = [image for image in file_list if os.path.isfile(os.path.join(folder, image)) and image.lower().endswith((".png"))]
-
+        image_name = [image for image in file_list if os.path.isfile(os.path.join(folder, image)) and image.lower().endswith((".png",".gif"))]
         window['file_list'].update(image_name)
+
+    elif event == "file_list":  # A file was chosen from the listbox
+        try:
+            filename = os.path.join(value["-FOLDER-"], value["file_list"][0])
+            window["image"].update(filename=filename)
+        except:
+            pass
+        
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
 window.close()
