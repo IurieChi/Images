@@ -1,11 +1,13 @@
 
 import PySimpleGUI as sg
 import rename_img_createdday as re
+import os.path
+
 
 # GUI
 sg.theme('DarkTeal2')
 
-form_rows = [ 
+first_column = [ 
     [sg.Text('Add created date to image from repository.')],
     [sg.Text('Image path:', size=(10,1)),sg.Input(key='path'),sg.FolderBrowse()], 
     [sg.Text('Select required format to be added to image: date, month, year:')],
@@ -15,16 +17,33 @@ form_rows = [
     [sg.Checkbox('JPG',key='.jpg'),sg.Checkbox('PNG',key='.png'),sg.Checkbox('GIF',key='.gif'),sg.Checkbox('RAV',key='.rav'),sg.Checkbox('SVG',key='.svg'),sg.Checkbox('Bitmap', key='.bmp'),sg.Checkbox('HEIC',key='.HEIC')],
     [sg.Text(size=(40,1), key='-OUTPUT-')],
     [sg.Button('Rename Img'), sg.Button('Exit')], 
-]
+    ]
 
-window = sg.Window('Rename Image from repository', form_rows)
+second_column = [
+    [sg.Text('Image viewer:',text_color=('yellow'))],
+    [sg.Text('Image folder:',size=(10,1)) ,sg.In(size=(25, 1), enable_events=True, key="-FOLDER-"),sg.FolderBrowse()],
+    [sg.Listbox(values=[], enable_events=True, size=(60,5), key='file_list')],
+    # [sg.Text(size=(40,1),key='-tout-')],
+    [sg.Image(key='image')]
+    ]
+
+#create window layout and separate first colum from second
+layout = [
+    [   sg.Column(first_column),
+        sg.VSeparator(),
+        sg.Column(second_column)
+    ]
+    ]
+
+window = sg.Window('Rename Image from repository', layout)
 while True:
     event , value = window.read()
     
     folder_path = value['path'] #save path to variable
     file_type = [] #create empty aray for file types
     date_format = '' #format date 
-
+    image_name = []
+    # logic for rename images
     if event == 'Rename Img':
         if folder_path == '':
             window['-OUTPUT-'].update('Select folder! ',text_color='yellow')
@@ -51,6 +70,20 @@ while True:
                     window['-OUTPUT-'].update("Succes",text_color='white')
                     # window['-OUTPUT-'].update(file_type,text_color='yellow')
  
+    # Logic for viewer image
+    if event == '-FOLDER-':
+        # Folder name was filled in, make a list of files in the folder
+        folder  = value['-FOLDER-']  
+    
+        try:
+            #get values from folder to a list 
+            file_list = os.listdir(folder)
+            
+        except:
+            file_list = []
+        image_name = [image for image in file_list if os.path.isfile(os.path.join(folder, image)) and image.lower().endswith((".png"))]
+
+        window['file_list'].update(image_name)
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
 window.close()
