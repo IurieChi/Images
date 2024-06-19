@@ -11,7 +11,7 @@ first_column = [
     [sg.Text('Add created date to image from repository.')],
     [sg.Text('Image path:', size=(10,1)),sg.Input(key='path'),sg.FolderBrowse()], 
     [sg.Text('Select required format to be added to image: date, month, year, time')],
-    [sg.Checkbox('Day',key='d'),sg.Checkbox('Month',key='m'),sg.Checkbox('Year',key='y'), sg.Checkbox('Time',key='t')],
+    [sg.Checkbox('Day',key='d'),sg.Checkbox('Month',key='m'),sg.Checkbox('Year',key='y'), sg.Checkbox('Time',key='H:%M')],
     [sg.Text('Select image type:')],
     [sg.Checkbox('Select All:', key= 'all')],
     [sg.Checkbox('JPG',key='.jpg'), sg.Checkbox('JPEG',key='.jpeg'),sg.Checkbox('PNG',key='.png'),sg.Checkbox('GIF',key='.gif'),sg.Checkbox('RAV',key='.rav'),sg.Checkbox('SVG',key='.svg'),sg.Checkbox('Bitmap', key='.bmp'),sg.Checkbox('HEIC',key='.HEIC')],
@@ -47,10 +47,10 @@ while True:
     if event == 'Rename Img':
         if folder_path == '':
             window['-OUTPUT-'].update('Select folder! ',text_color='yellow')
-        elif value ['d'] != True and value['m']!= True and value['y']!=True and value['t']!=True:
+        elif value ['d'] != True and value['m']!= True and value['y']!=True and value['H:%M']!=True:
             window['-OUTPUT-'].update('Please choose date time format!',text_color = 'orange')
         else:
-            for checkbox_key_date in ['d','m','y','t']:
+            for checkbox_key_date in ['d','m','y','H:%M']:
                 if value[checkbox_key_date]:
                     date_format += '%'+ checkbox_key_date + '_'
             if value['all']:
